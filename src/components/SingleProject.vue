@@ -7,7 +7,7 @@
         <div>
             <span class="material-icons" @click="deleteProject">delete</span>
             <span class="material-icons">edit</span>
-            <span class="material-icons">done</span>
+            <span class="material-icons" @click="completeProject">done</span>
         </div>
     </div>
     <p v-if="showDetail">{{project.detail}}</p>
@@ -30,6 +30,25 @@ export default {
             fetch(deleteRoute,{method:'DELETE'})
             .then(()=>{
                 this.$emit('delete',this.project.id)
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+        },
+        completeProject(){
+            let updatecompleteRoute=this.api+this.project.id;
+            console.log(updatecompleteRoute)
+            fetch(updatecompleteRoute,{
+                method:"PATCH",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    complete:!this.project.complete
+                })
+            })
+            .then(()=>{
+                this.$emit("complete",this.project.id)
             })
             .catch((err)=>{
                 console.log(err);
